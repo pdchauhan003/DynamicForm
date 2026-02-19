@@ -26,10 +26,12 @@ function Home() {
   const [generate,setGenerate]=useState(false);
   const [editIndex, setEditIndex] = useState(null);
   const bottomRef = useRef(null);   // useed to scroll bottm automatically
-  const prevLengthRef = useRef(0);   
+  const prevLengthRef = useRef(0);  
 
+
+  // when page is render then get items from localstorage
   useEffect(() => {
-  const stored = localStorage.getItem("formData");  // when page is render then get items from localstorage
+  const stored = localStorage.getItem("formData");  
   if (stored) {
     const data = JSON.parse(stored);
     setFormName(data.formname || '');
@@ -46,9 +48,11 @@ function Home() {
   }, [fields]);
 
   function handleSelect(value) {    // runs when select Aff items 
+    setEditIndex(null); 
     setSelected(value);   
     console.log("Selected:", selected);
   }
+
 
   const handleSave = () => {
     const formData = { formname: formName, description, fields };
@@ -58,18 +62,32 @@ function Home() {
   const showGeneratedForm=()=>{
     setGenerate(true)
   }
+
+
   if(generate){
     return(
-           <GeneratedForm/>     // when generate is true then show its page content
+        <GeneratedForm/>     // when generate is true then show its page content
       )
   }
+
   const handleReset=()=>{  
     localStorage.removeItem('formData')    // data removed from formData
     window.location.reload();       // refresh the page 
   }
+
+  const handleDeleteField = (indexToDelete) => {
+  setFields(prev => prev.filter((_, i) => i !== indexToDelete));
+  // if you're editing the same card, reset sidebar
+  if (editIndex === indexToDelete) {
+    setEditIndex(null);
+    setSelected("");
+  }
+};
+
   return (
     <>
       <div className="w-full p-2">
+
         <div className="m-10">
           <Input
             value={formName}
@@ -77,6 +95,7 @@ function Home() {
             placeholder="Enter Form Name"
             className='border-2'
           />
+
           <Input
             value={description}
             onChange={(e) => setDescription(e.target.value)}
@@ -84,10 +103,13 @@ function Home() {
             className='my-2 p-10'
           />
         </div>
+
           <div>
+
             {/* dynamic card section this section shows all inserted fields*/}
             
             <div className="space-y-4 m-10">
+
             {fields.map((field, index) => (
               <Card
                 key={index}
@@ -95,25 +117,41 @@ function Home() {
                   setEditIndex(index);     // which field to edit
                   setSelected(field.type); // open sidebar with correct form
                 }}
-                className={`border-2 rounded-2xl cursor-pointer`}>
+                className={`border-2 rounded-2xl cursor-pointer`}
+              >
+
                 <CardContent className="space-y-3 p-6">
-                  <p className="font-medium text-lg">
-                    {field.label || "Untitled Field"}
-                  </p>
+                  <div className="flex justify-between items-center">
+                    <p className="font-medium text-lg">
+                      {field.label || "Untitled Field"}
+                    </p>
+
+                    <Button
+                      variant="destructive"
+                      size="sm"
+                      onClick={(e) => {
+                        e.stopPropagation();      //prevent open sideBaer pother side events stoped
+                        handleDeleteField(index);
+                      }}
+                    >
+                      Delete
+                    </Button>
+                  </div>
+
                   {field.type === "text" && (
-                    <Input placeholder={field.placeholder || "Your answer"} disabled/>
+                    <Input placeholder={field.placeholder || "Your answer"} required={field.requireds} disabled/>
                   )}
 
                   {field.type === "password" && (
-                    <Input type="password" placeholder={field.placeholder} disabled/>
+                    <Input type="password" required={field.requireds} placeholder={field.placeholder} disabled/>
                   )}
 
                   {field.type === "email" && (
-                    <Input type="email" placeholder={field.placeholder} disabled/>
+                    <Input type="email" required={field.requireds} placeholder={field.placeholder} disabled/>
                   )}
 
                   {field.type === "dropdown" && (
-                    <select className="border rounded p-2 w-full" disabled>
+                    <select className="border rounded p-2 w-full" required={field.requireds} disabled>
                       <option>Select option</option>
                       {
                         field.options?.map((i, index) => ( 
@@ -121,13 +159,13 @@ function Home() {
                         ))
                       }
                     </select>
-                  )
+                    )
                   }
                   {
                     field.type=='checkbox' && (
                     field.options?.map((i, index) => (
                       <div key={index} className="flex items-center gap-2">
-                        <input type="checkbox" disabled/>
+                        <input type="checkbox" required={field.requireds} disabled/>
                         <span>{typeof i === "string" ? i : i.label}</span>
                       </div>
                     ))
@@ -136,18 +174,20 @@ function Home() {
                     field.type=='radio' && (
                     field.options?.map((i, index) => (
                       <div key={index} className="flex items-center gap-2">
-                        <input type="radio" name={field.label} disabled />
+                        <input type="radio" name={field.label} required={field.requireds} disabled />
                         <span>{typeof i === "string" ? i : i.label}</span>
                       </div>
                     ))
                   )
-                  }
+                }
                 </CardContent>
               </Card>
             ))}
           </div>
         </div>
+
         <div className="flex items-center justify-center">
+
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button className="bg-blue-600 text-white border hover:bg-blue-700">
@@ -156,35 +196,41 @@ function Home() {
             </DropdownMenuTrigger>
 
             <DropdownMenuContent>
+
               <DropdownMenuItem onClick={() => handleSelect("text")}>
                 Text
               </DropdownMenuItem>
+
               <DropdownMenuItem onClick={() => handleSelect("dropdown")}>
                 Dropdown
               </DropdownMenuItem>
+
               <DropdownMenuItem onClick={() => handleSelect("checkbox")}>
                 Checkbox
               </DropdownMenuItem>
+
               <DropdownMenuItem onClick={() => handleSelect("radio")}>
                 Radio
               </DropdownMenuItem>
+
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
         
         {/* when option selected then open sidebar componant */}
-        <SideBar value={selected} setValue={setSelected} data={fields} setData={setFields} editIndex={editIndex}/>
+        <SideBar value={selected} setValue={setSelected} data={fields} setData={setFields} editIndex={editIndex} setEditIndex={setEditIndex}/>
         
-        <div className="flex justify-between w-full" >
+        <div className="flex justify-between gap-2" >
           <Button onClick={handleSave} >Save</Button>
           <Button onClick={handleReset} >Reset</Button>
         </div>
+
         {
           pageView && <Button onClick={showGeneratedForm} className='my-1'>GeneratedForm</Button>
         }
+
       </div>
       <div ref={bottomRef}></div>  {/* scroll autimatic to this part */}
-
     </>
   );
 }

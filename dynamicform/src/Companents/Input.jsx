@@ -13,11 +13,13 @@ import {
 import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
 
-function InputForm({ setData,editIndex }) {
+function InputForm({ setData,editIndex,setEditIndex }) {
   const [label, setLabel] = useState("");
   const [selectedValue, setSelectedValue] = useState("");
   const [placeholder, setPlaceholder] = useState("");
-  const [required,setRequired]=useState(false)
+  const [requireds,setrequireds]=useState(false)
+
+  
   const handleClick = (e) => {   // when click save to changes then trigger this function
     e.preventDefault();
     alert('save changes')
@@ -25,7 +27,7 @@ function InputForm({ setData,editIndex }) {
       type: selectedValue,
       placeholder,
       label,
-      required
+      requireds:requireds
     };
     setData(prev => {                   // when clange then updat this part
       const updated = [...prev];
@@ -36,6 +38,10 @@ function InputForm({ setData,editIndex }) {
       }
       return updated;
     });
+    setLabel("");
+    setPlaceholder("");
+    setrequireds(false);
+    setEditIndex(null)
   };
   return (
     <>
@@ -70,10 +76,10 @@ function InputForm({ setData,editIndex }) {
               />
             </div>
 
-            {/* Required Switch */}
+            {/* requireds Switch */}
             <div className="flex items-center gap-3">
-              <Switch checked={required} onCheckedChange={setRequired} />
-              <Label>Required Field</Label>
+              <Switch checked={requireds} onCheckedChange={setrequireds} />
+              <Label>requireds Field</Label>
             </div>
           </>
         </CardContent>

@@ -32,10 +32,11 @@ import {
 } from "@/components/ui/select";
 
 function GeneratedForm() {
+
   const [pageHome, setPageHome] = useState(false); // use to Home page redirect
   const [formValues, setFormValues] = useState({}); // use to store form values
   const [submittedData, setSubmittedData] = useState(null); // after submit shows form filled data
-  const [errors, setErrors] = useState({}); // if required and not insert then store value in this array
+  const [errors, setErrors] = useState({}); // if requireds and not insert then store value in this array
   const stored = localStorage.getItem("formData"); // fetch items from localstorage
   const data = stored ? JSON.parse(stored) : null; // data parse because localstorage data is in string
   if (!data) return <p>No form data found</p>;
@@ -65,9 +66,7 @@ function GeneratedForm() {
     });
   };
 
-  // const handleSubmit = () => {
-  //   setSubmittedData(formValues);
-  // };
+
   const handleSubmit = () => {
     const newErrors = {};
 
@@ -75,9 +74,9 @@ function GeneratedForm() {
       const name = field.label || `field_${index}`;
       const value = formValues[name];
 
-      if (field.required) {
+      if (field.requireds) {
         if (!value || (Array.isArray(value) && value.length === 0)) {
-          newErrors[name] = `${field.label} is required`;
+          newErrors[name] = `${field.label} is requireds`;
         }
       }
     });
@@ -95,7 +94,7 @@ function GeneratedForm() {
     return <Home />;
   }
 
-  //  after submit
+  //  after submit click
   if (submittedData) {
     return (
       <div className="p-10">
@@ -191,6 +190,7 @@ function GeneratedForm() {
 
                   {/* Radio */}
                 {field.type === "radio" && (
+                  <>
                   <RadioGroup value={formValues[name] || ""} onValueChange={value => handleChange(name, value)}>
                     {field.options?.map((opt, i) => {
                       const value =
@@ -203,9 +203,10 @@ function GeneratedForm() {
                       );
                     })}
                   </RadioGroup>
-                  // {errors[name] && (
-                  //   <p className="text-red-500 text-sm mt-1">{errors[name]}</p>
-                  // )}
+                  {errors[name] && (
+                    <p className="text-red-500 text-sm mt-1">{errors[name]}</p>
+                  )}
+                  </>
                 )}
 
 

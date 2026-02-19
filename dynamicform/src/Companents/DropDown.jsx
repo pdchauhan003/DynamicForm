@@ -9,7 +9,7 @@ function DropDownForm({ value, setData, editIndex }) {
   // const type = value;
   const [label, setLabel] = useState("");
   const [options, setOptions] = useState(["Option 1", "Option 2"]);
-  // const [required, setRequired] = useState(false);
+  const [requireds, setrequireds] = useState(false);
 
   const addOption = () => {
     setOptions([...options, `Option ${options.length + 1}`]);
@@ -31,7 +31,7 @@ function DropDownForm({ value, setData, editIndex }) {
       type: value,
       options:options,
       label:label,
-      // required:required
+      requireds:requireds
     };
     setData((prev) => {
       const updated = [...prev];
@@ -58,11 +58,11 @@ function DropDownForm({ value, setData, editIndex }) {
             <Input value={label} onChange={(e) => setLabel(e.target.value)} />
           </div>
 
-          {/* Required Switch */}
-          {/* <div className="flex items-center gap-3">
-            <Switch checked={required} onCheckedChange={setRequired} />
-            <Label>Required Field</Label>
-          </div> */}
+          {/* requireds Switch */}
+          <div className="flex items-center gap-3">
+            <Switch checked={requireds} onCheckedChange={setrequireds} />
+            <Label>requireds Field</Label>
+          </div>
 
           {/* Dropdown Options */}
           <div className="space-y-4 pt-4 border-t">

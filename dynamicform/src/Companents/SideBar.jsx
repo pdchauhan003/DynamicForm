@@ -11,7 +11,7 @@ import DropDownForm from "./DropDown"
 import CheckboxFieldSettings from "./ChackBox"
 import RadioFieldSettings from "./Radio"
 
-function SideBar({ value, setValue, data, setData, editIndex }) {
+function SideBar({ value, setValue, data, setData, editIndex, setEditIndex }) {
   return (
     <Sheet
       open={!!value}
@@ -24,7 +24,7 @@ function SideBar({ value, setValue, data, setData, editIndex }) {
           <SheetTitle>Field Settings</SheetTitle>
         </SheetHeader>
         {
-            value=='text' && <InputForm data={data} setData={setData} editIndex={editIndex}/>
+            value=='text' && <InputForm data={data} setData={setData} editIndex={editIndex} setEditIndex={setEditIndex}/>
         }
         {
             value=='dropdown' && <DropDownForm data={data} setData={setData} value={value} editIndex={editIndex}/>

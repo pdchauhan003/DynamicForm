@@ -9,7 +9,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 export default function CheckboxFieldSettings({ value,setData, editIndex }) {
   // const type = value;
   const [label, setLabel] = useState("");
-  // const [required, setRequired] = useState(false);
+  const [requireds, setrequireds] = useState(false);
   const [options, setOptions] = useState([
     { label: "Option 1", checked: false },
     { label: "Option 2", checked: false },
@@ -44,7 +44,7 @@ export default function CheckboxFieldSettings({ value,setData, editIndex }) {
     type: value,
     options:options,
     label:label,
-    // required:required
+    requireds:requireds
   };
 
   setData(prev => {
@@ -74,11 +74,11 @@ export default function CheckboxFieldSettings({ value,setData, editIndex }) {
               <Input value={label} onChange={(e) => setLabel(e.target.value)} />
             </div>
 
-            {/* Required */}
-            {/* <div className="flex items-center gap-3">
-              <Switch checked={required} onCheckedChange={setRequired} />
-              <Label>Required Field</Label>
-            </div> */}
+            {/* requireds */}
+            <div className="flex items-center gap-3">
+              <Switch checked={requireds} onCheckedChange={setrequireds} />
+              <Label>requireds Field</Label>
+            </div>
 
             {/* Options */}
             <div className="space-y-4 pt-4 border-t">

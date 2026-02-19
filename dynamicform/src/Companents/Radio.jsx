@@ -8,9 +8,9 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 export default function RadioFieldSettings({setData, value, editIndex}) {
   // const type = value;
-  // const [required, setRequired] = useState(false);
+  // const [requireds, setrequireds] = useState(false);
   const [label, setLabel] = useState("");
-
+  const [requireds,setrequireds]=useState(false)
   const [options, setOptions] = useState([
     { label: "Option 1", selected: true },
     { label: "Option 2", selected: false },
@@ -48,7 +48,7 @@ export default function RadioFieldSettings({setData, value, editIndex}) {
     type: value,
     options:options,
     label:label,
-    // required:required
+    requireds:requireds
   };
 
   setData(prev => {
@@ -79,11 +79,11 @@ export default function RadioFieldSettings({setData, value, editIndex}) {
               <Input value={label} onChange={(e) => setLabel(e.target.value)} />
             </div>
 
-            {/* Required */}
-            {/* <div className="flex items-center gap-3">
-              <Switch checked={required} onCheckedChange={setRequired} />
-              <Label>Required Field</Label>
-            </div> */}
+            {/* requireds */}
+            <div className="flex items-center gap-3">
+              <Switch checked={requireds} onCheckedChange={setrequireds} />
+              <Label>requireds Field</Label>
+            </div>
 
             {/* Options */}
             <div className="space-y-4 pt-4 border-t">
