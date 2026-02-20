@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { ArrowLeft } from "lucide-react"
 import Home from "./Home";
 import {
   Card,
@@ -31,6 +32,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
+
 function GeneratedForm() {
 
   const [pageHome, setPageHome] = useState(false); // use to Home page redirect
@@ -49,6 +51,13 @@ function GeneratedForm() {
       ...prev,
       [name]: value,
     }));
+
+    //when required show then that field fill any data then removed red border and required field text
+    setErrors(prev => {
+      const copy = { ...prev };
+      delete copy[name];
+      return copy;
+    });
   };
 
   // checkbox
@@ -119,15 +128,16 @@ function GeneratedForm() {
 
   return (
     <>
+      
       {/* when this click then gi back Home Page */}
-      <Button onClick={() => setPageHome(true)} className="p-3">
-        Home
-      </Button>
+        <Button  variant="ghost"  size="icon" onClick={() => setPageHome(true)} className=" fixed m-2 p-0 h-auto w-auto hover:bg-transparent">
+          <ArrowLeft className="h-5 w-5" />
+        </Button>
 
       <Card className="border-4 m-10">
         <CardHeader className="text-center font-bold">
-          <CardTitle>{formname}</CardTitle>
-          <CardDescription>{description}</CardDescription>
+          <CardTitle className='text-4xl font-bold'>{formname}</CardTitle>
+          <CardDescription className='text-xl'>{description}</CardDescription>
         </CardHeader>
 
         <CardContent>
@@ -139,7 +149,8 @@ function GeneratedForm() {
                 <Label>{field.label}</Label>
 
                 {/* texts  */}
-                {(field.type === "text" ||
+                {
+                (field.type === "text" ||
                   field.type === "password" ||
                   field.type === "email") && (
                   <>
@@ -148,14 +159,18 @@ function GeneratedForm() {
                       placeholder={field.placeholder}
                       value={formValues[name] || ""}
                       onChange={(e) => handleChange(name, e.target.value)}
+                      className={errors[name] ? "border-red-500 focus-visible:ring-red-500" : ""}
                     />
                     {errors[name] && (
                       <p className="text-red-500 text-sm mt-1">
                         {errors[name]}
                       </p>
                     )}
+
+                    
                   </>
-                )}
+                )
+                }
                 {/* Dropdown */}
                 {field.type === "dropdown" && (
                   <>
@@ -163,7 +178,7 @@ function GeneratedForm() {
                       value={formValues[name] || ""}
                       onValueChange={(value) => handleChange(name, value)}
                     >
-                      <SelectTrigger className="w-full">
+                      <SelectTrigger className={`w-full ${errors[name] ? "border-red-500 focus:ring-red-500" : ""}`}>
                         <SelectValue placeholder={`Select ${field.label}`} />
                       </SelectTrigger>
 
@@ -191,18 +206,20 @@ function GeneratedForm() {
                   {/* Radio */}
                 {field.type === "radio" && (
                   <>
-                  <RadioGroup value={formValues[name] || ""} onValueChange={value => handleChange(name, value)}>
-                    {field.options?.map((opt, i) => {
-                      const value =
-                        typeof opt === "object" ? opt.label : opt;
-                      return (
-                        <div key={i} className="flex items-center gap-3">
-                          <RadioGroupItem value={value} id={i} />
-                          <Label htmlFor={i}>{value}</Label>
-                        </div>
-                      );
-                    })}
-                  </RadioGroup>
+                  <div className={`p-2 rounded-md ${errors[name] ? "border border-red-500" : ""}`}>
+                    <RadioGroup value={formValues[name] || ""} onValueChange={value => handleChange(name, value)}>
+                      {field.options?.map((opt, i) => {
+                        const value =
+                          typeof opt === "object" ? opt.label : opt;
+                        return (
+                          <div key={i} className="flex items-center gap-3">
+                            <RadioGroupItem value={value} id={i} />
+                            <Label htmlFor={i}>{value}</Label>
+                          </div>
+                        );
+                      })}
+                    </RadioGroup>
+                  </div>
                   {errors[name] && (
                     <p className="text-red-500 text-sm mt-1">{errors[name]}</p>
                   )}
@@ -213,7 +230,7 @@ function GeneratedForm() {
                 {/* Checkbox */}
                 {field.type === "checkbox" && (
                   <>
-                    <FieldSet>
+                    <FieldSet className={errors[name] ? "border border-red-500 p-2 rounded-md" : ""}>
                       <FieldGroup className="gap-3">
                         {field.options?.map((opt, i) => {
                           const value =

@@ -1,15 +1,24 @@
-import React, { useState } from "react";
+import React, { useEffect,useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-
-function DropDownForm({ value, setData, editIndex }) {
+import { Separator } from "@/components/ui/separator";
+function DropDownForm({ value, setData, editIndex, editField }) {
   // const type = value;
   const [label, setLabel] = useState("");
   const [options, setOptions] = useState(["Option 1", "Option 2"]);
   const [requireds, setrequireds] = useState(false);
+
+  useEffect(() => {
+  if (editField) {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setLabel(editField.label || "");
+    setOptions(editField.options || ["Option 1"]);
+    setrequireds(editField.requireds || false);
+  }
+}, [editField]);
 
   const addOption = () => {
     setOptions([...options, `Option ${options.length + 1}`]);
@@ -46,12 +55,14 @@ function DropDownForm({ value, setData, editIndex }) {
 
   return (
     <>
+    <div className="p-1">
       <Card className="max-w-xl mx-auto rounded-2xl shadow-sm">
         <CardHeader>
           <CardTitle>Field Settings</CardTitle>
         </CardHeader>
 
         <CardContent className="space-y-6">
+          <Separator/>
           {/* Field Label */}
           <div className="space-y-2">
             <Label>Field Label</Label>
@@ -99,8 +110,9 @@ function DropDownForm({ value, setData, editIndex }) {
             </p>
           </div>
         </CardContent>
+        <Button className='justify-center mx-5' onClick={handleClick}>Save changes</Button>
       </Card>
-      <Button onClick={handleClick}>Save changes</Button>
+      </div>
     </>
   );
 }

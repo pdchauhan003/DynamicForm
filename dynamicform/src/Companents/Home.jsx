@@ -14,6 +14,7 @@ import {
   Card,
   CardContent,
 } from "@/components/ui/card"
+import { dropdownComponent } from "@/Fields/DynamicCard";
 
 
 function Home() {
@@ -34,6 +35,7 @@ function Home() {
   const stored = localStorage.getItem("formData");  
   if (stored) {
     const data = JSON.parse(stored);
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setFormName(data.formname || '');
     setDescription(data.description || "");
     setFields(data.fields || []);
@@ -47,9 +49,14 @@ function Home() {
     prevLengthRef.current = fields.length;
   }, [fields]);
 
+  const resolveSidebarType = (type) => {
+    if (["text", "password", "email"].includes(type)) return "text";
+    return type;
+  };  
+
   function handleSelect(value) {    // runs when select Aff items 
     setEditIndex(null); 
-    setSelected(value);   
+    setSelected(resolveSidebarType(value));   
     console.log("Selected:", selected);
   }
 
@@ -66,7 +73,7 @@ function Home() {
 
   if(generate){
     return(
-        <GeneratedForm/>     // when generate is true then show its page content
+        <GeneratedForm/> // when generate is true then show its page content
       )
   }
 
@@ -122,15 +129,19 @@ function Home() {
 
                 <CardContent className="space-y-3 p-6">
                   <div className="flex justify-between items-center">
+
                     <p className="font-medium text-lg">
                       {field.label || "Untitled Field"}
+                      {field.requireds && (
+                        <span className="text-red-500 ml-1">*</span>
+                      )}
                     </p>
 
                     <Button
                       variant="destructive"
                       size="sm"
                       onClick={(e) => {
-                        e.stopPropagation();      //prevent open sideBaer pother side events stoped
+                        e.stopPropagation();      // when delete click then prevent open sideBaer other side events stoped
                         handleDeleteField(index);
                       }}
                     >
@@ -138,48 +149,11 @@ function Home() {
                     </Button>
                   </div>
 
-                  {field.type === "text" && (
-                    <Input placeholder={field.placeholder || "Your answer"} required={field.requireds} disabled/>
-                  )}
-
-                  {field.type === "password" && (
-                    <Input type="password" required={field.requireds} placeholder={field.placeholder} disabled/>
-                  )}
-
-                  {field.type === "email" && (
-                    <Input type="email" required={field.requireds} placeholder={field.placeholder} disabled/>
-                  )}
-
-                  {field.type === "dropdown" && (
-                    <select className="border rounded p-2 w-full" required={field.requireds} disabled>
-                      <option>Select option</option>
-                      {
-                        field.options?.map((i, index) => ( 
-                            <option key={index}>{typeof i === "string" ? i : i.label}</option>
-                        ))
-                      }
-                    </select>
-                    )
+                  {/* Dynamic card section  */}
+                  {
+                    dropdownComponent(field)
                   }
-                  {
-                    field.type=='checkbox' && (
-                    field.options?.map((i, index) => (
-                      <div key={index} className="flex items-center gap-2">
-                        <input type="checkbox" required={field.requireds} disabled/>
-                        <span>{typeof i === "string" ? i : i.label}</span>
-                      </div>
-                    ))
-                  )}
-                  {
-                    field.type=='radio' && (
-                    field.options?.map((i, index) => (
-                      <div key={index} className="flex items-center gap-2">
-                        <input type="radio" name={field.label} required={field.requireds} disabled />
-                        <span>{typeof i === "string" ? i : i.label}</span>
-                      </div>
-                    ))
-                  )
-                }
+
                 </CardContent>
               </Card>
             ))}
@@ -218,16 +192,15 @@ function Home() {
         </div>
         
         {/* when option selected then open sidebar componant */}
-        <SideBar value={selected} setValue={setSelected} data={fields} setData={setFields} editIndex={editIndex} setEditIndex={setEditIndex}/>
+        <SideBar value={selected} setValue={setSelected} data={fields} setData={setFields} editIndex={editIndex} setEditIndex={setEditIndex} editField={editIndex !== null ? fields[editIndex] : null}/>
         
-        <div className="flex justify-between gap-2" >
+        <div className="flex gap-2" >
           <Button onClick={handleSave} >Save</Button>
           <Button onClick={handleReset} >Reset</Button>
-        </div>
-
         {
-          pageView && <Button onClick={showGeneratedForm} className='my-1'>GeneratedForm</Button>
+          pageView && <Button onClick={showGeneratedForm} className=''>GeneratedForm</Button>
         }
+        </div>
 
       </div>
       <div ref={bottomRef}></div>  {/* scroll autimatic to this part */}

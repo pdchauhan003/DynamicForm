@@ -1,12 +1,12 @@
-import { useState } from "react";
+import { useEffect,useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
-
-export default function CheckboxFieldSettings({ value,setData, editIndex }) {
+import { Separator } from "@/components/ui/separator";
+export default function CheckboxFieldSettings({ value,setData, editIndex,editField }) {
   // const type = value;
   const [label, setLabel] = useState("");
   const [requireds, setrequireds] = useState(false);
@@ -14,6 +14,15 @@ export default function CheckboxFieldSettings({ value,setData, editIndex }) {
     { label: "Option 1", checked: false },
     { label: "Option 2", checked: false },
   ]);
+
+  useEffect(() => {
+  if (editField) {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setLabel(editField.label || "");
+    setrequireds(editField.requireds || false);
+    setOptions(editField.options || []);
+  }
+}, [editField]);
 
   const addOption = () => {
     setOptions([
@@ -61,13 +70,14 @@ export default function CheckboxFieldSettings({ value,setData, editIndex }) {
 };
   return (
     <>
-      <div className="p-6">
+      <div className="p-1">
         <Card className="max-w-xl mx-auto rounded-2xl shadow-sm">
           <CardHeader>
             <CardTitle>Field Settings</CardTitle>
           </CardHeader>
 
           <CardContent className="space-y-6">
+            <Separator />
             {/* Field Label */}
             <div className="space-y-2">
               <Label>Field Label</Label>
@@ -85,7 +95,7 @@ export default function CheckboxFieldSettings({ value,setData, editIndex }) {
               <div className="flex items-center justify-between">
                 <Label className="text-base">Checkbox Options</Label>
 
-                <Button variant="outline" size="sm" onClick={addOption}>
+                <Button className='' variant="outline" size="sm" onClick={addOption}>
                   Add Option
                 </Button>
               </div>
@@ -116,8 +126,8 @@ export default function CheckboxFieldSettings({ value,setData, editIndex }) {
               </p>
             </div>
           </CardContent>
+          <Button className='justify-center mx-5' onClick={handleClick}>Save changes</Button>
         </Card>
-        <Button onClick={handleClick}>Save changes</Button>
       </div>
     </>
   );

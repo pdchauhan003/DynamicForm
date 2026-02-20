@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect,useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent,CardHeader,CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -13,12 +13,21 @@ import {
 import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
 
-function InputForm({ setData,editIndex,setEditIndex }) {
+function InputForm({ setData,editIndex,setEditIndex,editField }) {
   const [label, setLabel] = useState("");
   const [selectedValue, setSelectedValue] = useState("");
   const [placeholder, setPlaceholder] = useState("");
   const [requireds,setrequireds]=useState(false)
 
+  useEffect(() => {
+  if (editField) {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setLabel(editField.label || "");
+    setSelectedValue(editField.type || "");
+    setPlaceholder(editField.placeholder || "");
+    setrequireds(editField.requireds || false);
+  }
+  }, [editField]);
   
   const handleClick = (e) => {   // when click save to changes then trigger this function
     e.preventDefault();
@@ -45,7 +54,11 @@ function InputForm({ setData,editIndex,setEditIndex }) {
   };
   return (
     <>
-      <Card className="mt-6 border-none shadow-none">
+    <div className="p-1">
+      <Card className="max-w-xl mx-auto rounded-2xl shadow-sm">
+        <CardHeader>
+          <CardTitle>Field Settings</CardTitle>
+        </CardHeader>
         <CardContent className="space-y-4">
           <>
             <Separator />
@@ -83,8 +96,9 @@ function InputForm({ setData,editIndex,setEditIndex }) {
             </div>
           </>
         </CardContent>
+        <Button className='justify-center' onClick={handleClick}>Save changes</Button> 
       </Card>
-      <Button onClick={handleClick}>Save changes</Button> 
+      </div>
     </>
   );
 }

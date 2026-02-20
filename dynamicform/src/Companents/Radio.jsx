@@ -1,12 +1,12 @@
-import { useState } from "react";
+import { useEffect,useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-
-export default function RadioFieldSettings({setData, value, editIndex}) {
+import { Separator } from "@/components/ui/separator";
+export default function RadioFieldSettings({setData, value, editIndex,editField}) {
   // const type = value;
   // const [requireds, setrequireds] = useState(false);
   const [label, setLabel] = useState("");
@@ -15,6 +15,15 @@ export default function RadioFieldSettings({setData, value, editIndex}) {
     { label: "Option 1", selected: true },
     { label: "Option 2", selected: false },
   ]);
+
+  useEffect(() => {
+  if (editField) {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setLabel(editField.label || "");
+    setOptions(editField.options || []);
+    setrequireds(editField.requireds || false);
+  }
+  }, [editField]);
 
   const addOption = () => {
     setOptions([
@@ -66,13 +75,14 @@ export default function RadioFieldSettings({setData, value, editIndex}) {
 
   return (
     <>
-      <div className="p-6">
+      <div className="p-1">
         <Card className="max-w-xl mx-auto rounded-2xl shadow-sm">
           <CardHeader>
             <CardTitle>Field Settings</CardTitle>
           </CardHeader>
 
           <CardContent className="space-y-6">
+            <Separator/>
             {/* Field Label */}
             <div className="space-y-2">
               <Label>Field Label</Label>
@@ -116,8 +126,9 @@ export default function RadioFieldSettings({setData, value, editIndex}) {
               </RadioGroup>
             </div>
           </CardContent>
+          <Button className='justify-center mx-5' onClick={handleClick}>Save changes</Button> 
         </Card>
-        <Button onClick={handleClick}>Save changes</Button>
+       
       </div>
     </>
   );
