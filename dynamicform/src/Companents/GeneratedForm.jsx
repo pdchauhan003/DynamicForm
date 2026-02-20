@@ -10,28 +10,12 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import {
-  Field,
-  FieldDescription,
-  FieldGroup,
-  FieldLabel,
-  FieldLegend,
-  FieldSet,
-} from "@/components/ui/field";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-
+import FormCheckBox from "@/Fields/FormCheckBox";
+import FormRadioField from "@/Fields/FormRadioFIeld";
+import FormDropDownField from "@/Fields/FormDropDownField";
+import FormInputField from "@/Fields/FormInputField";
 
 function GeneratedForm() {
 
@@ -153,115 +137,33 @@ function GeneratedForm() {
                 (field.type === "text" ||
                   field.type === "password" ||
                   field.type === "email") && (
-                  <>
-                    <Input
-                      type={field.type}
-                      placeholder={field.placeholder}
-                      value={formValues[name] || ""}
-                      onChange={(e) => handleChange(name, e.target.value)}
-                      className={errors[name] ? "border-red-500 focus-visible:ring-red-500" : ""}
-                    />
-                    {errors[name] && (
-                      <p className="text-red-500 text-sm mt-1">
-                        {errors[name]}
-                      </p>
-                    )}
-
-                    
-                  </>
-                )
+                      <>
+                        <FormInputField field={field} name={name} errors={errors} formValues={formValues} handleChange={handleChange}/>
+                      </>
+                  )
                 }
+
                 {/* Dropdown */}
                 {field.type === "dropdown" && (
                   <>
-                    <Select
-                      value={formValues[name] || ""}
-                      onValueChange={(value) => handleChange(name, value)}
-                    >
-                      <SelectTrigger className={`w-full ${errors[name] ? "border-red-500 focus:ring-red-500" : ""}`}>
-                        <SelectValue placeholder={`Select ${field.label}`} />
-                      </SelectTrigger>
-
-                      <SelectContent>
-                        {field.options?.map((opt, i) => {
-                          const value =
-                            typeof opt === "object" ? opt.label : opt;
-                          return (
-                            <SelectItem key={i} value={value}>
-                              {value}
-                            </SelectItem>
-                          );
-                        })}
-                      </SelectContent>
-                    </Select>
-
-                    {errors[name] && (
-                      <p className="text-red-500 text-sm mt-1">
-                        {errors[name]}
-                      </p>
-                    )}
+                    <FormDropDownField field={field} name={name} errors={errors} formValues={formValues} handleChange={handleChange}/>
                   </>
                 )}
 
                   {/* Radio */}
                 {field.type === "radio" && (
                   <>
-                  <div className={`p-2 rounded-md ${errors[name] ? "border border-red-500" : ""}`}>
-                    <RadioGroup value={formValues[name] || ""} onValueChange={value => handleChange(name, value)}>
-                      {field.options?.map((opt, i) => {
-                        const value =
-                          typeof opt === "object" ? opt.label : opt;
-                        return (
-                          <div key={i} className="flex items-center gap-3">
-                            <RadioGroupItem value={value} id={i} />
-                            <Label htmlFor={i}>{value}</Label>
-                          </div>
-                        );
-                      })}
-                    </RadioGroup>
-                  </div>
-                  {errors[name] && (
-                    <p className="text-red-500 text-sm mt-1">{errors[name]}</p>
-                  )}
+                  <FormRadioField field={field} name={name} errors={errors} formValues={formValues} handleChange={handleChange}/>
                   </>
                 )}
-
 
                 {/* Checkbox */}
                 {field.type === "checkbox" && (
                   <>
-                    <FieldSet className={errors[name] ? "border border-red-500 p-2 rounded-md" : ""}>
-                      <FieldGroup className="gap-3">
-                        {field.options?.map((opt, i) => {
-                          const value =
-                            typeof opt === "object" ? opt.label : opt;
-                          const id = `${name}-${i}`; // unique id
-
-                          return (
-                            <Field key={i} orientation="horizontal">
-                              <Checkbox
-                                id={id}
-                                checked={(formValues[name] || []).includes(
-                                  value,
-                                )}
-                                onCheckedChange={(checked) =>
-                                  handleCheckboxChange(name, value, checked)
-                                }
-                              />
-                              <FieldLabel htmlFor={id}>{value}</FieldLabel>
-                            </Field>
-                          );
-                        })}
-                      </FieldGroup>
-                    </FieldSet>
-
-                    {errors[name] && (
-                      <p className="text-red-500 text-sm mt-1">
-                        {errors[name]}
-                      </p>
-                    )}
+                    <FormCheckBox field={field} name={name} errors={errors} formValues={formValues} handleCheckboxChange={handleCheckboxChange}/>
                   </>
                 )}
+
               </div>
             );
           })}
