@@ -77,6 +77,7 @@ function InputForm({ setData,editIndex,setEditIndex,editField }) {
                   <SelectItem value="text">Text</SelectItem>
                   <SelectItem value="password">Password</SelectItem>
                   <SelectItem value="email">Email</SelectItem>
+                  <SelectItem value="number">Number</SelectItem>
                 </SelectContent>
               </Select>
             </div>

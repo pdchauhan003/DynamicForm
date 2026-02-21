@@ -91,9 +91,9 @@ function GeneratedForm() {
   if (submittedData) {
     return (
       <div className="p-10">
-        <h2 className="text-2xl font-bold mb-5">Submitted Data</h2>
+        <h2 className="text-2xl font-bold mb-5 text-center">Submitted Data</h2>
 
-        <Card className="p-5">
+        <Card className="p-5" style={{background: "linear-gradient(gray, pink)",boxShadow:"0 0 10px black"}} >
           {Object.entries(submittedData).map(([key, value]) => (
             <div key={key} className="mb-3">
               <strong>{key} : </strong>
@@ -118,7 +118,7 @@ function GeneratedForm() {
           <ArrowLeft className="h-5 w-5" />
         </Button>
 
-      <Card className="border-4 m-10">
+      <Card className="shadow-2xl m-10 bg-gray-200">
         <CardHeader className="text-center font-bold">
           <CardTitle className='text-4xl font-bold'>{formname}</CardTitle>
           <CardDescription className='text-xl'>{description}</CardDescription>
@@ -130,13 +130,11 @@ function GeneratedForm() {
 
             return (
               <div key={index} className="my-5">
-                <Label>{field.label}</Label>
+                <Label className='mb-1 font-bold ml-1'>{field.label}</Label>
 
                 {/* texts  */}
                 {
-                (field.type === "text" ||
-                  field.type === "password" ||
-                  field.type === "email") && (
+                (field.type === "text" || field.type === "password" || field.type === "email" || field.type === "number") && (
                       <>
                         <FormInputField field={field} name={name} errors={errors} formValues={formValues} handleChange={handleChange}/>
                       </>
@@ -144,25 +142,31 @@ function GeneratedForm() {
                 }
 
                 {/* Dropdown */}
-                {field.type === "dropdown" && (
+                {
+                field.type === "dropdown" && (
                   <>
                     <FormDropDownField field={field} name={name} errors={errors} formValues={formValues} handleChange={handleChange}/>
                   </>
-                )}
+                )
+                }
 
                   {/* Radio */}
-                {field.type === "radio" && (
+                {
+                field.type === "radio" && (
                   <>
                   <FormRadioField field={field} name={name} errors={errors} formValues={formValues} handleChange={handleChange}/>
                   </>
-                )}
+                )
+                }
 
                 {/* Checkbox */}
-                {field.type === "checkbox" && (
+                {
+                field.type === "checkbox" && (
                   <>
                     <FormCheckBox field={field} name={name} errors={errors} formValues={formValues} handleCheckboxChange={handleCheckboxChange}/>
                   </>
-                )}
+                )
+                }
 
               </div>
             );

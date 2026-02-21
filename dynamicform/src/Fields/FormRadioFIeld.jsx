@@ -10,7 +10,7 @@ function FormRadioField({field,errors,formValues,handleChange,name}){
                                       typeof opt === "object" ? opt.label : opt;
                                     return (
                                       <div key={i} className="flex items-center gap-3">
-                                        <RadioGroupItem value={value} id={i} />
+                                        <RadioGroupItem value={value} id={i} className='border-black'/>
                                         <Label htmlFor={i}>{value}</Label>
                                       </div>
                                     );

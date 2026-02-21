@@ -96,19 +96,8 @@ function Home() {
       <div className="w-full p-2">
 
         <div className="m-10">
-          <Input
-            value={formName}
-            onChange={(e) => setFormName(e.target.value)}
-            placeholder="Enter Form Name"
-            className='border-2'
-          />
-
-          <Input
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            placeholder="Description"
-            className='my-2 p-10'
-          />
+          <Input value={formName} onChange={(e) => setFormName(e.target.value)} placeholder="Enter Form Name" className='border-2 bg-white'/>
+          <Input value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Description" className='my-2 p-10 bg-white'/>
         </div>
 
           <div>
@@ -118,9 +107,7 @@ function Home() {
             <div className="space-y-4 m-10">
 
             {fields.map((field, index) => (
-              <Card
-                key={index}
-                onClick={() => {
+              <Card key={index} onClick={() => {
                   setEditIndex(index);     // which field to edit
                   setSelected(field.type); // open sidebar with correct form
                 }}

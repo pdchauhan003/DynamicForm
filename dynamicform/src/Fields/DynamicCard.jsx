@@ -28,6 +28,15 @@ export const dropdownComponent = (field) => {
         />
       )}
 
+      {field.type === "number" && (
+        <Input
+          type="number"
+          required={field.requireds}
+          placeholder={field.placeholder}
+          disabled
+        />
+      )}
+
       {field.type === "dropdown" && (
         <select
           className="border rounded p-2 w-full"
