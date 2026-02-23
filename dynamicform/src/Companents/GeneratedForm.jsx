@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import jsPdf from 'jspdf';
 import { ArrowLeft } from "lucide-react"
 import Home from "./Home";
 import {
@@ -87,6 +88,20 @@ function GeneratedForm() {
     return <Home />;
   }
 
+   const handleDownload=()=>{
+    const doc=new jsPdf();
+    doc.setFontSize(18);
+    doc.text('Submitted form data',20,20);
+    let y=40;
+    Object.entries(submittedData).forEach(([key,value])=>{
+      const text=`${key}:${Array.isArray(value) ? value.join(', ') : value}`;
+      doc.text(text,20,y);
+      y+=10;
+    });
+    doc.save('form-data.pdf');
+    alert('PDF Downloaded')
+  }
+
   //  after submit click
   if (submittedData) {
     return (
@@ -103,12 +118,18 @@ function GeneratedForm() {
           ))}
         </Card>
 
-        <Button className="mt-4" onClick={() => setSubmittedData(null)}>
-          Fill Again
-        </Button>
+          <div className="flex gap-2">
+            <Button className="mt-4" onClick={() => setSubmittedData(null)}>
+              Fill Again
+            </Button>
+            <Button className="mt-4" onClick={() => handleDownload(null)}>
+              Download PDF
+            </Button>
+          </div>
       </div>
     );
   }
+
 
   return (
     <>
